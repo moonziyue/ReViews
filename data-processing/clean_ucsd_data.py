@@ -31,7 +31,7 @@ ucsd_review_df=spark.read.json('s3a://amazonreviewsdataset/USCD_RAW/UCSD_JSON.js
 # drop columns, drop duplicates
 ucsd_review_df=ucsd_review_df.drop('image','reviewTime','reviewerName','style')
 ucsd_review_df=ucsd_review_df.dropDuplicates()
-ucsd_review_df.printSchema()
+# ucsd_review_df.printSchema()
 
 # rename columns
 ucsd_review_df=ucsd_review_df.withColumnRenamed('asin','product_id')
