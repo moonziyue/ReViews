@@ -16,9 +16,7 @@ df = spark.read.parquet("s3a://amazon-reviews-pds/parquet")
 # US-only: 1,5096,2278
 df=df.dropDuplicates(['review_id'])
 df=df.filter(df.marketplace=='US')
-# actually no NAs in this dataset but keep it for another dataset
 df=df.dropna(how='any', subset=['customer_id','review_id','product_id','star_rating','review_date'])
-
-df=df.drop('product_parent', 'total_votes', 'vine')
+df=df.drop('product_parent', 'total_votes', 'vine', 'marketplace', 'year')
 df=df.withColumn('verified_purchase', df.verified_purchase.cast('boolean'))
 # df.printSchema()
