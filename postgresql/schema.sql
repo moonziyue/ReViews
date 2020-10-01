@@ -9,3 +9,9 @@ CREATE TABLE customer (
 	verified_purchase boolean DEFAULT FALSE,
 	helpful_votes integer DEFAULT 0
 );
+
+CREATE TABLE product (
+	product_id varchar(15) PRIMARY KEY,
+	review_date DATE NOT NULL,
+	avg_rating integer NOT NULL
+);
