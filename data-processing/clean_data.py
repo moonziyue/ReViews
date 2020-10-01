@@ -1,7 +1,7 @@
 import pyspark
 from pyspark.sql.functions import *
 
-def clean_amazon_data():
+def clean_amazon_data(spark):
 	df = spark.read.parquet("s3a://amazon-reviews-pds/parquet")
 
 	# original: 1,6079,6570
@@ -17,7 +17,7 @@ def clean_amazon_data():
 
 	return df
 
-def clean_ucsd_data():
+def clean_ucsd_data(spark):
 	# META_DATA
 
 	all_meta_df=spark.read.json('s3a://amazonreviewsdataset/USCD_RAW/UCSD_JSON_META.json')
