@@ -3,6 +3,8 @@ import pyspark
 from pyspark.sql import SparkSession
 
 import clean_data
+import process_data
+import etl_to_db
 
 # connect to Spark
 def connect_to_spark(app=None, memory='6gb'):
@@ -27,10 +29,24 @@ def main():
 
 	amazon_df=clean_data.clean_amazon_data(spark, amazon_source)
 	ucsd_df=clean_data.clean_ucsd_data(spark, meta_source, review_source)
+
+	df=amazon_df.union(ucsd_df).distinct()
+
+	clean_time=time.time()
+	print('Data cleaned in:', (clean_time-start_time)/60, 'minutes.')
+
+	# processing
+	customer_summary_df=process_data.aggregate_customer(df)
+
+	process_time=time.time()
+	print('Data processed in:', (process_time-clean_time)/60, 'minutes.')
+
+	# etl to database
+	etl_to_db.write_to_postgres(customer_summary_df, 'customer', 'overwrite')
+
+	write_psql_time=time.time()
+	print('Data processed in:', (write_psql_time-process_time)/60, 'minutes.')
 	
-	print('Data cleaned in:', time.time()-start_time, 'secends.')
-
-
 
 if __name__ == '__main__':
 	main()
