@@ -10,7 +10,7 @@ def clean_amazon_data(spark, amazon_source):
 	df=df.dropDuplicates(['review_id'])
 	df=df.filter(df.marketplace=='US')
 	df=df.dropna(how='any', subset=['customer_id','review_id','product_id','star_rating','review_date'])
-	df=df.drop('product_parent', 'total_votes', 'vine', 'marketplace', 'year')
+	df=df.drop('product_parent', 'total_votes', 'vine', 'marketplace', 'year', 'review_id')
 	df=df.withColumn('verified_purchase', df.verified_purchase.cast('boolean'))
 	# df.printSchema()
 	print('amazon done')
