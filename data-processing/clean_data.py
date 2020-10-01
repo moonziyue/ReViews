@@ -1,8 +1,8 @@
 import pyspark
 from pyspark.sql.functions import *
 
-def clean_amazon_data(spark):
-	df = spark.read.parquet("s3a://amazon-reviews-pds/parquet")
+def clean_amazon_data(spark, amazon_source):
+	df = spark.read.parquet(amazon_source)
 
 	# original: 1,6079,6570
 	# no-duplicates: 1,5386,5404
@@ -17,10 +17,10 @@ def clean_amazon_data(spark):
 
 	return df
 
-def clean_ucsd_data(spark):
+def clean_ucsd_data(spark, meta_source, review_source):
 	# META_DATA
 
-	all_meta_df=spark.read.json('s3a://amazonreviewsdataset/USCD_RAW/UCSD_JSON_META.json')
+	all_meta_df=spark.read.json(meta_source)
 	# all_meta_df.printSchema()
 
 	# raw: 15023059
@@ -42,7 +42,7 @@ def clean_ucsd_data(spark):
 
 	# REVIEW_DATA
 
-	ucsd_review_df=spark.read.json('s3a://amazonreviewsdataset/USCD_RAW/UCSD_JSON.json')
+	ucsd_review_df=spark.read.json(review_source)
 	# ucsd_review_df.printSchema()
 
 	# drop columns, drop duplicates

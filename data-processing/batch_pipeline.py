@@ -16,12 +16,21 @@ def connect_to_spark(app=None, memory='6gb'):
 
 def main():
 	start_time=time.time()
+	
+	# create spark sesstion
 	spark=connect_to_spark('ReView', '6gb')
 
 	# clean data
-	amazon_df=clean_data.clean_amazon_data(spark)
-	ucsd_df=clean_data.clean_ucsd_data(spark)
+	amazon_source='s3a://amazon-reviews-pds/parquet'
+	meta_source='s3a://amazonreviewsdataset/USCD_RAW/UCSD_JSON_META.json'
+	review_source='s3a://amazonreviewsdataset/USCD_RAW/UCSD_JSON.json'
+
+	amazon_df=clean_data.clean_amazon_data(spark, amazon_source)
+	ucsd_df=clean_data.clean_ucsd_data(spark, meta_source, review_source)
+	
 	print('Data cleaned in:', time.time()-start_time, 'secends.')
+
+
 
 if __name__ == '__main__':
 	main()
