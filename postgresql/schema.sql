@@ -13,5 +13,5 @@ CREATE TABLE customer (
 CREATE TABLE product (
 	product_id varchar(15) PRIMARY KEY,
 	review_date DATE NOT NULL,
-	avg_rating integer NOT NULL
+	avg_rating double precision NOT NULL
 );
