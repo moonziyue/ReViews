@@ -37,12 +37,14 @@ def main():
 
 	# processing
 	customer_summary_df=process_data.aggregate_customer(df)
+	product_summary_df=process_data.aggregate_product(df)
 
 	process_time=time.time()
 	print('Data processed in:', (process_time-clean_time)/60, 'minutes.')
 
 	# etl to database
 	etl_to_db.write_to_postgres(customer_summary_df, 'customer', 'overwrite')
+	etl_to_db.write_to_postgres(product_summary_df, 'product', 'overwrite')
 
 	write_psql_time=time.time()
 	print('Data processed in:', (write_psql_time-process_time)/60, 'minutes.')
