@@ -30,7 +30,7 @@ def main():
 	amazon_df=clean_data.clean_amazon_data(spark, amazon_source)
 	ucsd_df=clean_data.clean_ucsd_data(spark, meta_source, review_source)
 
-	df=amazon_df.union(ucsd_df).distinct()
+	df=amazon_df.unionByName(ucsd_df).distinct()
 
 	clean_time=time.time()
 	print('Data cleaned in:', (clean_time-start_time)/60, 'minutes.')
