@@ -24,3 +24,11 @@ def aggregate_customer(df):
 	# customer_summary_df.show()
 
 	return customer_summary_df
+
+def aggregate_product(df):
+	product_summary_df=df.groupby('customer_id','review_date').agg(
+    avg('star_rating').alias('avg_rating'),
+    count('star_rating').alias('count')
+    )
+
+    return product_summary_df
