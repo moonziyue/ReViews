@@ -43,11 +43,11 @@ def main():
 	print('Data processed in:', (process_time-clean_time)/60, 'minutes.')
 
 	# etl to database
-	etl_to_db.write_to_postgres(customer_summary_df, 'customer', 'overwrite')
-	etl_to_db.write_to_postgres(product_summary_df, 'product', 'overwrite')
+	etl_to_db.write_to_postgres(customer_summary_df, 'customer', 'append')
+	etl_to_db.write_to_postgres(product_summary_df, 'product', 'append')
 
 	write_psql_time=time.time()
-	print('Data processed in:', (write_psql_time-process_time)/60, 'minutes.')
+	print('Data wrote to postgres in:', (write_psql_time-process_time)/60, 'minutes.')
 	
 
 if __name__ == '__main__':
