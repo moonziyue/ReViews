@@ -1,6 +1,5 @@
 CREATE TABLE customer (
 	customer_id varchar(50) PRIMARY KEY,
-	zero_star integer DEFAULT 0,
 	one_star integer DEFAULT 0,
 	two_star integer DEFAULT 0,
 	three_star integer DEFAULT 0,
@@ -14,5 +13,6 @@ CREATE TABLE customer (
 CREATE TABLE product (
 	product_id varchar(50) PRIMARY KEY,
 	review_date DATE NOT NULL,
-	avg_rating double precision NOT NULL
+	avg_rating double precision NOT NULL,
+	total_reviews integer NOT NULL
 );
