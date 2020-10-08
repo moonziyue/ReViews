@@ -16,3 +16,5 @@ CREATE TABLE product (
 	avg_rating double precision NOT NULL,
 	total_reviews integer NOT NULL
 );
+
+CREATE INDEX idx_product ON product(product_id);
