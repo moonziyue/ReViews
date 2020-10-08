@@ -37,3 +37,7 @@ def aggregate_product(df):
 	product_summary_df=product_summary_df.withColumn('total_reviews',product_summary_df.total_reviews.cast('INT'))
 
 	return product_summary_df
+
+def union_df(df1, df2):
+	df=df1.unionByName(df2).distinct()
+	return df
