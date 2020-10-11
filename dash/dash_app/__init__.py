@@ -16,7 +16,7 @@ def init_app():
         from .assets import compile_static_assets
 
         # Import Dash application
-        from .dash_app.dashboard import init_dashboard
+        from .plotlydash.dashboard import init_dashboard
         app = init_dashboard(app)
 
         # Compile static assets
