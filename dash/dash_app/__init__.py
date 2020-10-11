@@ -1,25 +1,25 @@
-"""Flask config."""
-from os import environ, path
-from dotenv import load_dotenv
-
-BASE_DIR = path.abspath(path.dirname(__file__))
-load_dotenv(path.join(BASE_DIR, '.env'))
+"""Initialize Flask app."""
+from flask import Flask
+from flask_assets import Environment
 
 
-class Config:
-    """Flask configuration variables."""
+def init_app():
+    """Construct core Flask application with embedded Dash app."""
+    app = Flask(__name__, instance_relative_config=False)
+    app.config.from_object('config.Config')
+    assets = Environment()
+    assets.init_app(app)
 
-    # General Config
-    FLASK_APP = environ.get('FLASK_APP')
-    FLASK_ENV = environ.get('FLASK_ENV')
-    SECRET_KEY = environ.get('SECRET_KEY')
+    with app.app_context():
+        # Import parts of our core Flask app
+        from . import routes
+        from .assets import compile_static_assets
 
-    # Assets
-    LESS_BIN = environ.get('LESS_BIN')
-    ASSETS_DEBUG = environ.get('ASSETS_DEBUG')
-    LESS_RUN_IN_DEBUG = environ.get('LESS_RUN_IN_DEBUG')
+        # Import Dash application
+        from .dash_app.dashboard import init_dashboard
+        app = init_dashboard(app)
 
-    # Static Assets
-    STATIC_FOLDER = 'static'
-    TEMPLATES_FOLDER = 'templates'
-    COMPRESSOR_DEBUG = environ.get('COMPRESSOR_DEBUG')
+        # Compile static assets
+        compile_static_assets(assets)
+
+        return app
