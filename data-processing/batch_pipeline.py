@@ -1,4 +1,3 @@
-import time
 import pyspark
 from pyspark.sql import SparkSession
 
@@ -17,8 +16,6 @@ def connect_to_spark(app=None, memory='6gb'):
 	return _spark
 
 def main():
-	start_time=time.time()
-	
 	# create spark sesstion
 	spark=connect_to_spark('ReView', '6gb')
 
@@ -29,7 +26,7 @@ def main():
 
 	amazon_df=clean_data.clean_amazon_data(spark, amazon_source)
 	ucsd_df=clean_data.clean_ucsd_data(spark, meta_source, review_source)
-	df=clean_data.unionByName(amazon_df, ucsd_df)
+	df=clean_data.union_df(amazon_df, ucsd_df)
 
 	# processing
 	customer_summary_df=process_data.aggregate_customer(df)
