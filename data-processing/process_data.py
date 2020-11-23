@@ -3,7 +3,8 @@ from pyspark.sql.functions import *
 def aggregate_customer(df):
 
 	df=df.select('customer_id','star_rating','verified_purchase','helpful_votes')
-	
+	df=df.repartition('customer_id')
+
 	customer_summary_df=df.groupBy('customer_id').agg(
 		sum(when(col('star_rating') == 1, 1).otherwise(0)).alias('one_star'),
 		sum(when(col('star_rating') == 2, 1).otherwise(0)).alias('two_star'),
@@ -29,6 +30,7 @@ def aggregate_customer(df):
 def aggregate_product(df):
 	
 	df=df.select('product_id','review_date','star_rating')
+	df=df.repartition('product_id')
 	
 	product_summary_df=df.groupby('product_id','review_date').agg(
 		avg('star_rating').alias('avg_rating'),
@@ -39,5 +41,16 @@ def aggregate_product(df):
 	return product_summary_df
 
 def union_df(df1, df2):
+	
 	df=df1.unionByName(df2).distinct()
 	return df
+
+def get_review(df):
+	
+	df=df.select('customer_id','product_id','product_title','star_rating','verified_purchase','review_body','review_date')
+	return df
+
+
+
+
+

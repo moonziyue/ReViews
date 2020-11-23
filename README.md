@@ -6,7 +6,7 @@ Insights on Amazon products based on reviews
 
 This platforme is designed to provide statistical analysis for operation teams to crack down on Amazon's fraudulent reviews and for consumers to gain clarity on a product before purchase.
 
-Live Demo: http://www.dataengprocessor.me/
+~~Live Demo: http://www.dataengprocessor.me/~~
 
 - Search "product+keywords"
 
@@ -44,9 +44,10 @@ Live Demo: http://www.dataengprocessor.me/
 
 1. Configure AWS credentials.
 2. Create Elasticsearch index and PostgreSQL database.
-2. Run ```$ python ./data-processing/batch_pipeline.py```.
-3. Flask application:
-```
+3. Run ```$ python ./data-processing/batch_pipeline.py```.
+4. Flask application:
+
+```bash
 $ cd dash
 $ python3 -m venv myenv
 $ source myenv/bin/activate

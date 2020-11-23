@@ -31,22 +31,17 @@ def main():
 	ucsd_df=clean_data.clean_ucsd_data(spark, meta_source, review_source)
 	df=clean_data.unionByName(amazon_df, ucsd_df)
 
-	clean_time=time.time()
-	print('Data cleaned in:', (clean_time-start_time)/60, 'minutes.')
-
 	# processing
 	customer_summary_df=process_data.aggregate_customer(df)
 	product_summary_df=process_data.aggregate_product(df)
+	review_df=process_data.get_review(df)
 
-	process_time=time.time()
-	print('Data processed in:', (process_time-clean_time)/60, 'minutes.')
-
-	# etl to database
+	# etl to postgres
 	etl_to_db.write_to_postgres(customer_summary_df, 'customer', 'append')
 	etl_to_db.write_to_postgres(product_summary_df, 'product', 'append')
 
-	write_psql_time=time.time()
-	print('Data wrote to postgres in:', (write_psql_time-process_time)/60, 'minutes.')
+	# etl to elastic
+	etl_to_db.write_to_es(customer_summary_df, 'reviews/doc', 'append')
 	
 
 if __name__ == '__main__':

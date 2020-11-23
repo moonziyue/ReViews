@@ -4,9 +4,6 @@ from pyspark.sql.functions import *
 def clean_amazon_data(spark, amazon_source):
 	df = spark.read.parquet(amazon_source)
 
-	# original: 1,6079,6570
-	# no-duplicates: 1,5386,5404
-	# US-only: 1,5096,2278
 	df=df.dropDuplicates(['review_id'])
 	df=df.filter(df.marketplace=='US')
 	df=df.dropna(how='any', subset=['customer_id','review_id','product_id','star_rating','review_date'])
@@ -14,8 +11,6 @@ def clean_amazon_data(spark, amazon_source):
 	df=df.withColumn('verified_purchase', df.verified_purchase.cast('boolean'))
 	df=df.fillna(False,subset=['verified_purchase'])
 	df=df.fillna(0,subset=['helpful_votes'])
-	# df.printSchema()
-	print('amazon done')
 
 	return df
 
@@ -23,10 +18,7 @@ def clean_ucsd_data(spark, meta_source, review_source):
 	# META_DATA
 
 	all_meta_df=spark.read.json(meta_source)
-	# all_meta_df.printSchema()
 
-	# raw: 15023059
-	# drop-duplicates: 14741571
 	filtered_meta_df=all_meta_df.select('asin','main_cat','title')
 	filtered_meta_df=filtered_meta_df.dropDuplicates(['asin'])
 
@@ -43,17 +35,13 @@ def clean_ucsd_data(spark, meta_source, review_source):
 	filtered_meta_df=filtered_meta_df.filter(~filtered_meta_df.product_category.contains('getTime()'))
 	filtered_meta_df=filtered_meta_df.filter(~filtered_meta_df.product_title.contains('getTime()'))
 
-	# filtered_meta_df.printSchema()
-
 	# REVIEW_DATA
 
 	ucsd_review_df=spark.read.json(review_source)
-	# ucsd_review_df.printSchema()
 
 	# drop columns, drop duplicates
 	ucsd_review_df=ucsd_review_df.drop('image','reviewTime','reviewerName','style')
 	ucsd_review_df=ucsd_review_df.dropDuplicates()
-	# ucsd_review_df.printSchema()
 
 	# rename columns
 	ucsd_review_df=ucsd_review_df.withColumnRenamed('asin','product_id')
@@ -81,7 +69,6 @@ def clean_ucsd_data(spark, meta_source, review_source):
 	ucsd_review_df=ucsd_review_df.filter(~ucsd_review_df.review_body.contains('getTime()'))
 	ucsd_review_df=ucsd_review_df.filter(~ucsd_review_df.customer_id.contains('getTime()'))
 	ucsd_review_df=ucsd_review_df.filter(~ucsd_review_df.review_headline.contains('getTime()'))
-	# ucsd_review_df.printSchema()
 
 	# unixtime -> date
 	ucsd_review_df=ucsd_review_df.withColumn('review_date', from_unixtime('unixReviewTime',format='yyyy-MM-dd'))
@@ -90,7 +77,5 @@ def clean_ucsd_data(spark, meta_source, review_source):
 
 	# JOIN
 	ucsd_df=ucsd_review_df.join(filtered_meta_df, 'product_id', 'inner')
-
-	print('ucsd done')
 
 	return ucsd_df
